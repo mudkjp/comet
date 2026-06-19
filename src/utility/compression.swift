@@ -1,3 +1,4 @@
+#if canImport(Compression)
 import Compression
 
 // this is AI cuz i cba to do this
@@ -44,3 +45,19 @@ private func adler32(_ data: [UInt8]) -> UInt32 {
 
     return (b << 16) | a
 }
+#else
+import CZlib
+
+func zlibCompress(_ input: [UInt8]) -> [UInt8]? {
+    var destinationLength = compressBound(uLong(input.count))
+    var destination = [UInt8](repeating: 0, count: Int(destinationLength))
+
+    let status = input.withUnsafeBufferPointer { source in
+        compress2(&destination, &destinationLength, source.baseAddress, uLong(source.count), 6)
+    }
+
+    guard status == Z_OK else { return nil }
+
+    return Array(destination[..<Int(destinationLength)])
+}
+#endif
