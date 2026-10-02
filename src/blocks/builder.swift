@@ -277,7 +277,7 @@ struct WoolBuilder: BlockLike {
     }
 
     init(data: UInt8) {
-        self.color = WoolColor(rawValue: ~data & 0xF) ?? .white
+        self.color = WoolColor(rawValue: data & 0xF) ?? .white
     }
 
     func color(_ color: WoolColor) -> WoolBuilder {
@@ -285,7 +285,7 @@ struct WoolBuilder: BlockLike {
     }
 
     func asBlock() -> Block {
-        Block(id: id, data: ~color.rawValue & 0xF)
+        Block(id: id, data: color.rawValue)
     }
 }
 
